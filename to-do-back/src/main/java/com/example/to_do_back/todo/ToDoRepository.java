@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import java.time.LocalDateTime;
 
@@ -46,8 +47,27 @@ public class ToDoRepository {
         return coll.subList(start, end);
     }
 
-    public Collection<ToDo> findAll(int page) {
+    public Collection<ToDo> findAll(int page, String nameFilter, Integer priorityFilter, Boolean doneFilter) {
         List<ToDo> res = new ArrayList<ToDo>(todoMap.values());
+
+        // Aplicar filtros
+        if (nameFilter != null && !nameFilter.isEmpty()) {
+            res = res.stream()
+                     .filter(todo -> todo.getText().toLowerCase().contains(nameFilter.toLowerCase()))
+                     .collect(Collectors.toList());
+        }
+
+        if (priorityFilter != null) {
+            res = res.stream()
+                     .filter(todo -> todo.getPriority() == priorityFilter)
+                     .collect(Collectors.toList());
+        }
+
+        if (doneFilter != null) {
+            res = res.stream()
+                     .filter(todo -> todo.isDone() == doneFilter)
+                     .collect(Collectors.toList());
+        }
 
         return getPage(res,page,10);
     }

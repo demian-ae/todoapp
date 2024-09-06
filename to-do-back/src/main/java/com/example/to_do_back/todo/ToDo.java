@@ -1,6 +1,6 @@
 package com.example.to_do_back.todo;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ public class ToDo {
     private String text;
     private boolean done;
     private Integer priority;
-    private LocalDate doneDate;
-    private LocalDate dueDate;
-    private LocalDate creationDate;
+    private LocalDateTime doneDate;
+    private LocalDateTime dueDate;
+    private LocalDateTime creationDate;
 }

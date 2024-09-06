@@ -20,12 +20,24 @@ public class ToDoService {
         return toDoRepository.findById(id);
     }
 
-    public Collection<ToDo> getAllToDos(){
-        return toDoRepository.findAll();
+    public Collection<ToDo> getAllToDos(int page, String nameFilter, Integer priorityFilter, Boolean doneFilter){
+        return toDoRepository.findAll(page, nameFilter, priorityFilter, doneFilter);
     }
 
     public void deleteToDoById(Long id){
         toDoRepository.deleteById(id);
+    }
+
+    public Optional<ToDo> updateById(Long id, ToDo toDo){
+        return toDoRepository.updateById(id,toDo);
+    }
+
+    public void markAsDoneById(Long id){
+        toDoRepository.markAsDoneById(id);
+    }
+
+    public void markUndoneById(Long id){
+        toDoRepository.markUndoneById(id);
     }
 
 }

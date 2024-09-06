@@ -3,16 +3,20 @@ package com.example.to_do_back.todo;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import java.time.LocalDateTime;
 
 
 
 @Repository
 public class ToDoRepository {
     private Map<Long, ToDo> todoMap = new HashMap<>();
-    private long idCounter = 1; 
+    private long idCounter = 1;
 
     public ToDo save(ToDo toDo){
         if(toDo.getId() == null){
@@ -26,12 +30,76 @@ public class ToDoRepository {
         return Optional.of(todoMap.get(id));
     }
 
-    public Collection<ToDo> findAll() {
-        return todoMap.values();
+    private static <T> Collection<T> getPage(List<T> coll, int page, int size) {
+        page = page - 1; // because 1-indexed. 
+        if (page < 0 || size <= 0) { // validation
+            throw new IllegalArgumentException("Número de página debe ser mayor o igual a 0 y tamaño de página debe ser mayor a 0");
+        }
+
+        int start = page * size;
+        int end = Math.min(start + size, coll.size());
+
+        if (start >= coll.size()) {
+            return List.of();
+        }
+
+        return coll.subList(start, end);
+    }
+
+    public Collection<ToDo> findAll(int page) {
+        List<ToDo> res = new ArrayList<ToDo>(todoMap.values());
+
+        return getPage(res,page,10);
     }
 
     public void deleteById(Long id){
         todoMap.remove(id);
+    }
+
+    public Optional<ToDo> updateById(Long id, ToDo toDo){
+        Optional<ToDo> res = Optional.ofNullable(todoMap.get(id));
+        if(res.isPresent()){
+            ToDo curr = res.get();
+            curr.setText(toDo.getText());
+            curr.setDone(toDo.isDone());
+            curr.setPriority(toDo.getPriority());
+            if(toDo.isDone()){
+                curr.setDoneDate(toDo.getDoneDate());
+            }
+            curr.setDoneDate(null);
+            curr.setDueDate(toDo.getDueDate());
+            curr.setCreationDate(toDo.getCreationDate());
+            
+            todoMap.put(curr.getId(), curr);
+            return Optional.of(curr);
+        }
+        return res;
+    }
+
+    public void markAsDoneById(Long id){
+        Optional<ToDo> res = Optional.ofNullable(todoMap.get(id));
+
+        if(res.isPresent()){
+            ToDo curr = res.get();
+            if(!curr.isDone()){
+                curr.setDoneDate(LocalDateTime.now());
+                curr.setDone(true);
+            }
+            todoMap.put(curr.getId(), curr);
+        } 
+    }
+
+    public void markUndoneById(Long id){
+        Optional<ToDo> res = Optional.ofNullable(todoMap.get(id));
+
+        if(res.isPresent()){
+            ToDo curr = res.get();
+            if(curr.isDone()){
+                curr.setDoneDate(null);
+                curr.setDone(false);
+            }
+            todoMap.put(curr.getId(), curr);
+        } 
     }
 
 }

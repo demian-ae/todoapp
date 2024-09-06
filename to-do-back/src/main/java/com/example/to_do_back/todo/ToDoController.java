@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Collection;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -23,8 +25,12 @@ public class ToDoController {
     private ToDoService toDoService;
 
     @GetMapping
-    public ResponseEntity<Collection<ToDo>> getAllToDos(){
-        return ResponseEntity.ok(toDoService.getAllToDos());
+    public ResponseEntity<Collection<ToDo>> getAllToDos(
+        @RequestParam(defaultValue = "1") int page, 
+        @RequestParam(defaultValue = "10") int size
+        ){
+
+        return ResponseEntity.ok(toDoService.getAllToDos(page)); // 0-indexed
     }
 
     @GetMapping("/{id}")
@@ -45,6 +51,27 @@ public class ToDoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteToDo(@PathVariable Long id){
         toDoService.deleteToDoById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ToDo> updateById(@PathVariable Long id, @RequestBody ToDo toDo) {
+        Optional<ToDo> res = toDoService.updateById(id, toDo);
+        if(res.isPresent()){
+            return ResponseEntity.ok(res.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/{id}/done")
+    public ResponseEntity<Void> markAsDoneById(@PathVariable Long id){
+        toDoService.markAsDoneById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/undone")
+    public ResponseEntity<Void> markUndoneById(@PathVariable Long id){
+        toDoService.markUndoneById(id);
         return ResponseEntity.ok().build();
     }
 }

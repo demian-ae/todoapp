@@ -8,7 +8,7 @@ import { Page } from '../types/Page';
 import { SearchAndFilter } from '../types/SearchAndFilter';
 
 export const useTodos = () => {
-  const [page, setPage] = useState<Page>({ curr: 1, total: 1, data: [] });
+  const [page, setPage] = useState<Page>({ curr: 1, total: 1, allAvgTime:'', lowAvgTime:'', mediumAvgTime:'', highAvgTime:'', data: [] });
   const [searchAndFilter, setSearchAndFilter] = useState<SearchAndFilter>({})
   const [todos, setTodos] = useState<ToDo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -18,7 +18,7 @@ export const useTodos = () => {
     console.log("fetch to dos: ", JSON.stringify(searchAndFilter))
     setLoading(true);
     try {
-      const pageRes = await getToDos(pageNum, searchAndFilter.done, searchAndFilter.priority, searchAndFilter.text);
+      const pageRes = await getToDos(pageNum, searchAndFilter.done, searchAndFilter.priority, searchAndFilter.text, searchAndFilter.isPriorityAsc, searchAndFilter.isDueDateAsc);
       setTodos(pageRes.data);
       setPage(pageRes);
     } catch (error) {
@@ -85,5 +85,5 @@ export const useTodos = () => {
     fetchToDos(1,searchAndFilter);
   }
 
-  return { page, todos, loading, error, reloadTodos, changePage, handleMarkDone, handleMarkUnDone, handleDelete, changeSearchAndFilter};
+  return { page, todos, loading, error, searchAndFilter, reloadTodos, changePage, handleMarkDone, handleMarkUnDone, handleDelete, changeSearchAndFilter};
 };

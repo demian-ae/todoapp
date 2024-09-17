@@ -2,8 +2,6 @@ package com.example.to_do_back.todo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
 import java.util.Optional;
 
 
@@ -20,8 +18,8 @@ public class ToDoService {
         return toDoRepository.findById(id);
     }
 
-    public Page getAllToDos(int page, String text, Integer priorityFilter, Boolean doneFilter){
-        return toDoRepository.findAll(page, text, priorityFilter, doneFilter);
+    public Page getAllToDos(int page, String text, Integer priorityFilter, Boolean doneFilter, Boolean isPriorityAsc, Boolean isDueDateAsc){
+        return toDoRepository.findAll(page, text, priorityFilter, doneFilter, isPriorityAsc, isDueDateAsc );
     }
 
     public void deleteToDoById(Long id){

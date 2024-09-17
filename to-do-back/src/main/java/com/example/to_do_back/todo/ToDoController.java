@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.util.Collection;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,10 +30,12 @@ public class ToDoController {
         @RequestParam(defaultValue = "1") int page, 
         @RequestParam(required = false) String text,
         @RequestParam(required = false) Integer priority,
-        @RequestParam(required = false) Boolean done
+        @RequestParam(required = false) Boolean done,
+        @RequestParam(required = false) Boolean isPriorityAsc,
+        @RequestParam(required = false) Boolean isDueDateAsc
         ){
 
-        return ResponseEntity.ok(toDoService.getAllToDos(page, text, priority, done)); // 0-indexed
+        return ResponseEntity.ok(toDoService.getAllToDos(page, text, priority, done, isPriorityAsc, isDueDateAsc)); // 0-indexed
     }
 
     @GetMapping("/{id}")

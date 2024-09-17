@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 public class Page {
     private int curr;
     private int total;
+    private String allAvgTime;
+    private String lowAvgTime;
+    private String mediumAvgTime;
+    private String highAvgTime;
     private Collection<ToDo> data; 
-
-    
 }

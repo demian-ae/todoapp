@@ -2,12 +2,15 @@ import { Page } from "../types/Page";
 import { ToDo } from "../types/ToDo";
 import apiCLient from "./client";
 
-export const getToDos = async (page: number, done?:boolean, priority?:number, text?:string,): Promise<Page> => {
+export const getToDos = async (page: number, done?:boolean, priority?:number, text?:string, isPriorityAsc?:boolean, isDueDateAsc?:boolean): Promise<Page> => {
     console.log(text)
     let url = `/todos?page=${page}`;
     if(done!==undefined) url = url + `&done=${done}`;
     if(priority!==undefined) url = url + `&priority=${priority}`;
     if(text!==undefined) url = url + `&text=${text}`;
+    if(isPriorityAsc!==undefined) url = url + `&isPriorityAsc=${isPriorityAsc}`;
+    if(isDueDateAsc!==undefined) url = url + `&isDueDateAsc=${isDueDateAsc}`;
+    
     console.log(url);
     return apiCLient<Page>(url);
 }

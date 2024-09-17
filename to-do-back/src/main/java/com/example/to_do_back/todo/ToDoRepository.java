@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 public class ToDoRepository {
     private Map<Long, ToDo> todoMap = new HashMap<>();
     private long idCounter = 1;
+    public static final int PAGE_SIZE = 10;
 
     public ToDo save(ToDo toDo){
         if(toDo.getId() == null){
@@ -47,7 +48,10 @@ public class ToDoRepository {
         return coll.subList(start, end);
     }
 
-    public Collection<ToDo> findAll(int page, String nameFilter, Integer priorityFilter, Boolean doneFilter) {
+    public Page findAll(int page, String nameFilter, Integer priorityFilter, Boolean doneFilter) {
+        Page pageRes = new Page();
+        pageRes.setTotal((int)Math.ceil((double)todoMap.size()/PAGE_SIZE));
+
         List<ToDo> res = new ArrayList<ToDo>(todoMap.values());
 
         // Aplicar filtros
@@ -68,8 +72,9 @@ public class ToDoRepository {
                      .filter(todo -> todo.isDone() == doneFilter)
                      .collect(Collectors.toList());
         }
-
-        return getPage(res,page,10);
+        pageRes.setCurr(page);
+        pageRes.setData(getPage(res,page,PAGE_SIZE));
+        return pageRes;
     }
 
     public void deleteById(Long id){

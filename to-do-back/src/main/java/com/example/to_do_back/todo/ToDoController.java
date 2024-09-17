@@ -27,7 +27,7 @@ public class ToDoController {
     private ToDoService toDoService;
 
     @GetMapping
-    public ResponseEntity<Collection<ToDo>> getAllToDos(
+    public ResponseEntity<Page> getAllToDos(
         @RequestParam(defaultValue = "1") int page, 
         @RequestParam(required = false) String name,
         @RequestParam(required = false) Integer priority,

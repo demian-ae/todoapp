@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ToDoList, ToDoForm, Search, AddToDoButton } from "./components";
+import { ToDoList, ToDoForm, Search, AddToDoButton, Paginator } from "./components";
 import "./components/ModalForm.css"
 import { useTodos } from "./hooks/useTodos";
 import { ToDo } from "./types/ToDo";
@@ -7,13 +7,8 @@ import { ToDo } from "./types/ToDo";
 
 function ToDoApp() {
   const [isFormOpened, setIsFormOpened] = useState(false);
-  const { todos, loading, error, setTodos, reloadTodos, handleMarkDone, handleMarkUnDone, handleDelete} = useTodos();
+  const { page, todos, loading, error, changePage, reloadTodos, handleMarkDone, handleMarkUnDone, handleDelete} = useTodos();
   const [editingTodo, setEditingTodo] = useState<ToDo | null>(null);
-  
-  const removeTodo = (index: number) => {
-    const newTodos = todos.filter((_, i) => i !== index);
-    setTodos(newTodos);
-  };
   
   const editTodo = (todo: ToDo) => {
     console.log(JSON.stringify(todo))
@@ -40,12 +35,13 @@ function ToDoApp() {
         {error && <p>Error: {error}</p>}
         <ToDoList 
           todos={todos} 
-          removeTodo={removeTodo} 
           handleMarkDone={handleMarkDone} 
           handleMarkUnDone={handleMarkUnDone} 
           handleDelete={handleDelete}
           handleEdit={editTodo}  
         />
+        <span>Curr:{page?.curr}, Total: {page?.total}</span>
+        <Paginator currPage={page} changePage={changePage}/>
       </div>
 
       {/* Modal */}

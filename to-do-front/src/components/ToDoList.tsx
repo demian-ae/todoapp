@@ -3,7 +3,6 @@ import { FaEdit, FaTrash } from 'react-icons/fa'; // Import the icons you need
 
 interface ToDoListArgs {
     todos: ToDo[],
-    removeTodo: (id: number) => void
     handleMarkDone: (id: number) => void,
     handleMarkUnDone: (id: number) => void,
     handleDelete: (id: number) => void,
@@ -64,7 +63,7 @@ export const ToDoList = ({todos, handleMarkDone, handleMarkUnDone, handleDelete,
             <tbody>
                 {
                     todos.map((todo, index) => (
-                        <tr key={index} onClick={() => {onMarkDone(todo.done, todo.id)}}>
+                        <tr key={index}>
                             <td>
                                 <input 
                                     type="checkbox" 
@@ -73,9 +72,9 @@ export const ToDoList = ({todos, handleMarkDone, handleMarkUnDone, handleDelete,
                                     onChange={() => {onMarkDone(todo.done, todo.id)}}
                                     />
                                 </td>
-                            <td className={getTextDecorationClass(todo.done)}>{todo.text}</td>
-                            <td className={getTextDecorationClass(todo.done)}>{getStringPriority(todo.priority)}</td>
-                            <td className={getTextDecorationClass(todo.done)}>{formatDateTime(todo.dueDate)}</td>
+                            <td className={getTextDecorationClass(todo.done)} onClick={() => {onMarkDone(todo.done, todo.id)}}>{todo.text}</td>
+                            <td className={getTextDecorationClass(todo.done)} onClick={() => {onMarkDone(todo.done, todo.id)}}>{getStringPriority(todo.priority)}</td>
+                            <td className={getTextDecorationClass(todo.done)} onClick={() => {onMarkDone(todo.done, todo.id)}}>{todo.dueDate?formatDateTime(todo.dueDate):"None"}</td>
                             <td>
                                 <button onClick={() => onDelete(todo.id)} className='btn btn-outline-danger m-1'><FaTrash /></button>
                                 <button onClick={() => handleEdit(todo)} className='btn btn-outline-warning m-1'><FaEdit /></button>

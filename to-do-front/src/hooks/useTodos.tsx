@@ -4,17 +4,20 @@
 import { useCallback, useEffect, useState } from 'react'
 import { deleteTodo, getToDos, markDone, markUnDone } from '../api/ToDoService';
 import { ToDo } from '../types/ToDo';
+import { Page } from '../types/Page';
 
 export const useTodos = () => {
+  const [page, setPage] = useState<Page>({ curr: 1, total: 1, data: [] });
   const [todos, setTodos] = useState<ToDo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchToDos = useCallback(async () => {
+  const fetchToDos = useCallback(async (pageNum: number) => {
     setLoading(true);
     try {
-      const toDosData = await getToDos();
-      setTodos(toDosData);
+      const pageRes = await getToDos(pageNum);
+      setTodos(pageRes.data);
+      setPage(pageRes);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
@@ -23,14 +26,14 @@ export const useTodos = () => {
   }, []);
 
   useEffect(() => {
-    fetchToDos();
-  }, [fetchToDos]);
+    fetchToDos(page.curr);
+  }, [fetchToDos, page.curr]);
 
   const reloadTodos = useCallback(() => {
-    fetchToDos();
-  }, [fetchToDos]);
+    fetchToDos(page.curr);
+  }, [fetchToDos, page.curr]);
 
-  const handleMarkDone = async(id: number) => {
+  const handleMarkDone = async (id: number) => {
     try {
       const resp = await markDone(id);
       console.log("mark done success", resp);
@@ -38,9 +41,9 @@ export const useTodos = () => {
       // console.log(error); // <----------------------
     }
     reloadTodos();
-  }
+  };
 
-  const handleMarkUnDone = async(id: number) => {
+  const handleMarkUnDone = async (id: number) => {
     try {
       const resp = await markUnDone(id);
       console.log("mark done success", resp);
@@ -48,9 +51,9 @@ export const useTodos = () => {
       // console.log(error); // <----------------------
     }
     reloadTodos();
-  }
+  };
 
-  const handleDelete = async(id: number) => {
+  const handleDelete = async (id: number) => {
     try {
       const resp = await deleteTodo(id);
       console.log("mark done success", resp);
@@ -58,7 +61,20 @@ export const useTodos = () => {
       console.log(error); // <----------------------
     }
     reloadTodos();
-  }
+  };
 
-  return { todos, loading, error, reloadTodos, setTodos, handleMarkDone, handleMarkUnDone, handleDelete};
-}
+  const changePage = (pageNum: number) => {
+    setPage(prevPage => {
+      const newPage = {
+        ...prevPage,
+        curr: pageNum
+      };
+      fetchToDos(pageNum); // Fetch todos for the new page number
+      return newPage;
+    });
+    console.log("number: ", pageNum);
+    console.log("change page:", JSON.stringify(page));
+  };
+
+  return { page, todos, loading, error, reloadTodos, changePage, handleMarkDone, handleMarkUnDone, handleDelete };
+};

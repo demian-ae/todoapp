@@ -1,8 +1,9 @@
+import { Page } from "../types/Page";
 import { ToDo } from "../types/ToDo";
 import apiCLient from "./client";
 
-export const getToDos = async (): Promise<ToDo[]> => {
-    return apiCLient<ToDo[]>('/todos');
+export const getToDos = async (page: number): Promise<Page> => {
+    return apiCLient<Page>(`/todos?page=${page}`);
 }
 
 export const createToDo = async (todo: ToDo): Promise<ToDo> => {

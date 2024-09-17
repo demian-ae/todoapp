@@ -12,8 +12,11 @@ interface ToDoFormArgs {
 export const ToDoForm = ({ toggleForm, reloadTodos, existingTodo }: ToDoFormArgs) => {
     const { text, dueDate, data, handleChange, handleSubmit, setFormulario } = useForm(existingTodo?existingTodo:ToDo());
 
+    const title = existingTodo? "Edit to-do":"New to-do";
+    const initialPriority = existingTodo? existingTodo.priority: "1";
+
     // Define the state for the selected value
-    const [selectedValue, setSelectedValue] = useState('1');
+    const [selectedValue, setSelectedValue] = useState(initialPriority);
 
     // Event handler for select change
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -38,7 +41,7 @@ export const ToDoForm = ({ toggleForm, reloadTodos, existingTodo }: ToDoFormArgs
         <div className="form-container">
             <div onClick={toggleForm} className="overlay"></div>
             <div className="card card-space border rounded ">
-                <h2>New to-do</h2>
+                <h2>{title}</h2>
 
                 <form autoComplete="off" className="m-2" onSubmit={submitData}>
                     <div className="mb-1">

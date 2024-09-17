@@ -2,7 +2,7 @@
 
 
 import { useCallback, useEffect, useState } from 'react'
-import { getToDos } from '../api/ToDoService';
+import { getToDos, markDone, markUnDone } from '../api/ToDoService';
 import { ToDo } from '../types/ToDo';
 
 export const useTodos = () => {
@@ -30,5 +30,26 @@ export const useTodos = () => {
     fetchToDos();
   }, [fetchToDos]);
 
-  return { todos, loading, error, reloadTodos, setTodos };
+  const handleMarkDone = async(id: number) => {
+    try {
+      const resp = await markDone(id);
+      console.log("mark done success", resp);
+    } catch (error) {
+      // console.log('here the error')
+      // console.log(error);
+    }
+    reloadTodos();
+  }
+
+  const handleMarkUnDone = async(id: number) => {
+    try {
+      const resp = await markUnDone(id);
+      console.log("mark done success", resp);
+    } catch (error) {
+      // console.log(error);
+    }
+    reloadTodos();
+  }
+
+  return { todos, loading, error, reloadTodos, setTodos, handleMarkDone, handleMarkUnDone};
 }

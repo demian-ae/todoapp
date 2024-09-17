@@ -3,11 +3,22 @@ import { FaEdit, FaTrash } from 'react-icons/fa'; // Import the icons you need
 
 interface ToDoListArgs {
     todos: ToDo[],
-    removeTodo: (index: number) => void
+    removeTodo: (id: number) => void
+    handleMarkDone: (id: number) => void,
+    handleMarkUnDone: (id: number) => void,
 }
 
 
-export const ToDoList = ({todos, removeTodo}: ToDoListArgs) => {
+export const ToDoList = ({todos, removeTodo, handleMarkDone, handleMarkUnDone}: ToDoListArgs) => {
+    const onMarkDone = (isDone: boolean, id:number | null) => {
+        if(!id){ return }
+        if(isDone){
+            handleMarkUnDone(id);
+        }else{ 
+            handleMarkDone(id)
+        }
+
+    }
     return (
         <table className="table table-striped table-hover">
             <thead>
@@ -23,8 +34,15 @@ export const ToDoList = ({todos, removeTodo}: ToDoListArgs) => {
                 {
                     todos.map((todo, index) => (
                         <tr key={index}>
-                            <td><input type="checkbox" className='form-check-input' /></td>
-                            <td>{todo.text}</td>
+                            <td>
+                                <input 
+                                    type="checkbox" 
+                                    className='form-check-input' 
+                                    checked={todo.done}
+                                    onChange={() => {onMarkDone(todo.done, todo.id)}}
+                                    />
+                                </td>
+                            <td>{todo.done?'true':'false'} {todo.text}</td>
                             <td>{todo.priority}</td>
                             <td>{todo.dueDate}</td>
                             <td>

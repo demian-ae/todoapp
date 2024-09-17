@@ -11,3 +11,15 @@ export const createToDo = async (todo: ToDo): Promise<ToDo> => {
         body: JSON.stringify(todo)
     });
 }
+
+export const markDone = async (id: number): Promise<string> =>{
+    return apiCLient<string>(`/todos/${id}/done`,{
+        method: 'POST'
+    })
+}
+
+export const markUnDone = async (id: number): Promise<string> =>{
+    return apiCLient<string>(`/todos/${id}/undone`,{
+        method: 'PUT'
+    })
+}

@@ -5,7 +5,7 @@ import { FormEvent } from "react";
 
 interface ToDoFormArgs {
     toggleForm: () => void,
-    reloadTodos: () => void
+    reloadTodos: () => void,
 }
 
 

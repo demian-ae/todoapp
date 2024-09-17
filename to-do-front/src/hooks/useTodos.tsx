@@ -2,7 +2,7 @@
 
 
 import { useCallback, useEffect, useState } from 'react'
-import { getToDos, markDone, markUnDone } from '../api/ToDoService';
+import { deleteTodo, getToDos, markDone, markUnDone } from '../api/ToDoService';
 import { ToDo } from '../types/ToDo';
 
 export const useTodos = () => {
@@ -35,8 +35,7 @@ export const useTodos = () => {
       const resp = await markDone(id);
       console.log("mark done success", resp);
     } catch (error) {
-      // console.log('here the error')
-      // console.log(error);
+      // console.log(error); // <----------------------
     }
     reloadTodos();
   }
@@ -46,10 +45,20 @@ export const useTodos = () => {
       const resp = await markUnDone(id);
       console.log("mark done success", resp);
     } catch (error) {
-      // console.log(error);
+      // console.log(error); // <----------------------
     }
     reloadTodos();
   }
 
-  return { todos, loading, error, reloadTodos, setTodos, handleMarkDone, handleMarkUnDone};
+  const handleDelete = async(id: number) => {
+    try {
+      const resp = await deleteTodo(id);
+      console.log("mark done success", resp);
+    } catch (error) {
+      console.log(error); // <----------------------
+    }
+    reloadTodos();
+  }
+
+  return { todos, loading, error, reloadTodos, setTodos, handleMarkDone, handleMarkUnDone, handleDelete};
 }

@@ -6,7 +6,7 @@ import { useTodos } from "./hooks/useTodos";
 
 function ToDoApp() {
   const [isFormOpened, setIsFormOpened] = useState(false);
-  const { todos, loading, error, setTodos, reloadTodos, handleMarkDone, handleMarkUnDone} = useTodos();
+  const { todos, loading, error, setTodos, reloadTodos, handleMarkDone, handleMarkUnDone, handleDelete} = useTodos();
 
   // const addTodo = (todo: string) => {
   //   setTodos([...todos, todo]);
@@ -31,7 +31,7 @@ function ToDoApp() {
 
         {loading && <p>Loading...</p>}
         {error && <p>Error: {error}</p>}
-        <ToDoList todos={todos} removeTodo={removeTodo} handleMarkDone={handleMarkDone} handleMarkUnDone={handleMarkUnDone}/>
+        <ToDoList todos={todos} removeTodo={removeTodo} handleMarkDone={handleMarkDone} handleMarkUnDone={handleMarkUnDone} handleDelete={handleDelete}/>
       </div>
 
       {/* Modal */}

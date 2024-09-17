@@ -12,14 +12,20 @@ export const createToDo = async (todo: ToDo): Promise<ToDo> => {
     });
 }
 
-export const markDone = async (id: number): Promise<string> =>{
-    return apiCLient<string>(`/todos/${id}/done`,{
+export const markDone = async (id: number): Promise<void> =>{
+    return apiCLient<void>(`/todos/${id}/done`,{
         method: 'POST'
     })
 }
 
-export const markUnDone = async (id: number): Promise<string> =>{
-    return apiCLient<string>(`/todos/${id}/undone`,{
+export const markUnDone = async (id: number): Promise<void> =>{
+    return apiCLient<void>(`/todos/${id}/undone`,{
         method: 'PUT'
+    })
+}
+
+export const deleteTodo = async (id: number): Promise<ToDo> =>{
+    return apiCLient<ToDo>(`/todos/${id}`,{
+        method: 'DELETE'
     })
 }

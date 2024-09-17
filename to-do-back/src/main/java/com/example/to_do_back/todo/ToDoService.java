@@ -20,8 +20,8 @@ public class ToDoService {
         return toDoRepository.findById(id);
     }
 
-    public Page getAllToDos(int page, String nameFilter, Integer priorityFilter, Boolean doneFilter){
-        return toDoRepository.findAll(page, nameFilter, priorityFilter, doneFilter);
+    public Page getAllToDos(int page, String text, Integer priorityFilter, Boolean doneFilter){
+        return toDoRepository.findAll(page, text, priorityFilter, doneFilter);
     }
 
     public void deleteToDoById(Long id){

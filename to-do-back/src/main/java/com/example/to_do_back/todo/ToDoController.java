@@ -29,12 +29,12 @@ public class ToDoController {
     @GetMapping
     public ResponseEntity<Page> getAllToDos(
         @RequestParam(defaultValue = "1") int page, 
-        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String text,
         @RequestParam(required = false) Integer priority,
         @RequestParam(required = false) Boolean done
         ){
 
-        return ResponseEntity.ok(toDoService.getAllToDos(page, name, priority, done)); // 0-indexed
+        return ResponseEntity.ok(toDoService.getAllToDos(page, text, priority, done)); // 0-indexed
     }
 
     @GetMapping("/{id}")

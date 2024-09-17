@@ -7,7 +7,7 @@ import { ToDo } from "./types/ToDo";
 
 function ToDoApp() {
   const [isFormOpened, setIsFormOpened] = useState(false);
-  const { page, todos, loading, error, changePage, reloadTodos, handleMarkDone, handleMarkUnDone, handleDelete} = useTodos();
+  const {page, todos, loading, error, changePage, reloadTodos, handleMarkDone, handleMarkUnDone, handleDelete, changeSearchAndFilter} = useTodos();
   const [editingTodo, setEditingTodo] = useState<ToDo | null>(null);
   
   const editTodo = (todo: ToDo) => {
@@ -23,7 +23,7 @@ function ToDoApp() {
     <>
       <div className="container">
         <h1 className="mb-4">To-Do App</h1>
-        <Search />
+        <Search onSearch={changeSearchAndFilter}/>
         <AddToDoButton toggleForm={() => {
           setEditingTodo(null);
           toggleForm();
@@ -40,7 +40,6 @@ function ToDoApp() {
           handleDelete={handleDelete}
           handleEdit={editTodo}  
         />
-        <span>Curr:{page?.curr}, Total: {page?.total}</span>
         <Paginator currPage={page} changePage={changePage}/>
       </div>
 

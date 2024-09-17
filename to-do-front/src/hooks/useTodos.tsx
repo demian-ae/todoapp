@@ -5,17 +5,20 @@ import { useCallback, useEffect, useState } from 'react'
 import { deleteTodo, getToDos, markDone, markUnDone } from '../api/ToDoService';
 import { ToDo } from '../types/ToDo';
 import { Page } from '../types/Page';
+import { SearchAndFilter } from '../types/SearchAndFilter';
 
 export const useTodos = () => {
   const [page, setPage] = useState<Page>({ curr: 1, total: 1, data: [] });
+  const [searchAndFilter, setSearchAndFilter] = useState<SearchAndFilter>({})
   const [todos, setTodos] = useState<ToDo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchToDos = useCallback(async (pageNum: number) => {
+  const fetchToDos = useCallback(async (pageNum: number, searchAndFilter:SearchAndFilter) => {
+    console.log("fetch to dos: ", JSON.stringify(searchAndFilter))
     setLoading(true);
     try {
-      const pageRes = await getToDos(pageNum);
+      const pageRes = await getToDos(pageNum, searchAndFilter.done, searchAndFilter.priority, searchAndFilter.text);
       setTodos(pageRes.data);
       setPage(pageRes);
     } catch (error) {
@@ -26,11 +29,11 @@ export const useTodos = () => {
   }, []);
 
   useEffect(() => {
-    fetchToDos(page.curr);
+    fetchToDos(page.curr, searchAndFilter);
   }, [fetchToDos, page.curr]);
 
   const reloadTodos = useCallback(() => {
-    fetchToDos(page.curr);
+    fetchToDos(page.curr, searchAndFilter);
   }, [fetchToDos, page.curr]);
 
   const handleMarkDone = async (id: number) => {
@@ -69,12 +72,18 @@ export const useTodos = () => {
         ...prevPage,
         curr: pageNum
       };
-      fetchToDos(pageNum); // Fetch todos for the new page number
+      fetchToDos(pageNum, searchAndFilter); // Fetch todos for the new page number
       return newPage;
     });
     console.log("number: ", pageNum);
     console.log("change page:", JSON.stringify(page));
   };
 
-  return { page, todos, loading, error, reloadTodos, changePage, handleMarkDone, handleMarkUnDone, handleDelete };
+  const changeSearchAndFilter = (searchAndFilter: SearchAndFilter) => {
+    console.log("useTodos: ", JSON.stringify(searchAndFilter))
+    setSearchAndFilter(searchAndFilter);
+    fetchToDos(1,searchAndFilter);
+  }
+
+  return { page, todos, loading, error, reloadTodos, changePage, handleMarkDone, handleMarkUnDone, handleDelete, changeSearchAndFilter};
 };

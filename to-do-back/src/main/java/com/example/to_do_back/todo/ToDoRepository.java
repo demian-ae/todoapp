@@ -50,7 +50,6 @@ public class ToDoRepository {
 
     public Page findAll(int page, String nameFilter, Integer priorityFilter, Boolean doneFilter) {
         Page pageRes = new Page();
-        pageRes.setTotal((int)Math.ceil((double)todoMap.size()/PAGE_SIZE));
 
         List<ToDo> res = new ArrayList<ToDo>(todoMap.values());
 
@@ -72,6 +71,8 @@ public class ToDoRepository {
                      .filter(todo -> todo.isDone() == doneFilter)
                      .collect(Collectors.toList());
         }
+
+        pageRes.setTotal((int)Math.ceil((double)res.size()/PAGE_SIZE));
         pageRes.setCurr(page);
         pageRes.setData(getPage(res,page,PAGE_SIZE));
         return pageRes;

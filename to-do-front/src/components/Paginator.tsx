@@ -37,7 +37,7 @@ export const Paginator = ({currPage, changePage}: PaginatorArgs) => {
     };
 
     return (
-        <nav aria-label="Page navigation example">
+        <nav className="d-flex justify-content-center" aria-label="Page navigation example">
             <ul className="pagination">
                 <li className={`page-item ${currPage.curr === 1 ? 'disabled' : ''}`}>
                     <button className="page-link" onClick={(e) => { e.preventDefault(); handlePrevious(); }}>

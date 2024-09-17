@@ -1,17 +1,30 @@
 
 import { ToDo } from "../types/ToDo";
 import { useForm } from "../hooks/useForm";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 
 interface ToDoFormArgs {
     toggleForm: () => void,
     reloadTodos: () => void,
+    existingTodo: ToDo | null;
 }
 
+export const ToDoForm = ({ toggleForm, reloadTodos, existingTodo }: ToDoFormArgs) => {
+    const { text, dueDate, data, handleChange, handleSubmit, setFormulario } = useForm(existingTodo?existingTodo:ToDo());
 
+    // Define the state for the selected value
+    const [selectedValue, setSelectedValue] = useState('1');
 
-export const ToDoForm = ({ toggleForm, reloadTodos }: ToDoFormArgs) => {
-    const { text, priority, dueDate, data, handleChange, handleSubmit } = useForm(ToDo());
+    // Event handler for select change
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selected = event.target.value
+        setSelectedValue(selected);
+        const priority = parseInt(selected);
+        setFormulario({
+            ...data,
+            priority: priority
+        })
+    };
 
     const submitData = (ev: FormEvent) => {
         handleSubmit(data, ev);
@@ -38,7 +51,7 @@ export const ToDoForm = ({ toggleForm, reloadTodos }: ToDoFormArgs) => {
                             onChange={handleChange}
                         />
                         <label className="form-label m-2">Priority:</label>
-                        <select name="priority" className="form-select" value={priority}>
+                        <select name="priority" className="form-select" value={selectedValue} onChange={handleSelectChange}>
                             <option value={3}>High</option>
                             <option value={2}>Medium</option>
                             <option value={1}>Low</option>
@@ -63,14 +76,14 @@ export const ToDoForm = ({ toggleForm, reloadTodos }: ToDoFormArgs) => {
                             <button
                                 type="submit"
                                 className="btn btn-primary m-1">
-                                Add
+                                Save
                             </button>
                         </div>
                     </div>
 
                 </form>
 
-                {/* <span>{JSON.stringify(data)}</span> */}
+                {/* <span>{JSON.stringify(data)} + VALUE: {selectedValue}</span> */}
 
 
             </div>

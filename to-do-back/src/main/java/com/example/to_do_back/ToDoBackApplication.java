@@ -9,6 +9,7 @@ import com.example.to_do_back.todo.ToDo;
 import com.example.to_do_back.todo.ToDoRepository;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -37,9 +38,11 @@ public class ToDoBackApplication {
                 String taskDescription = tasks.get(i);
                 boolean done = random.nextBoolean();
                 int priority = random.nextInt(3) + 1; // priority 1-3
-                LocalDateTime doneDate = done? LocalDateTime.now():null;
-                LocalDateTime dueDate = LocalDateTime.now().plusDays(random.nextInt(30));
-                LocalDateTime creationDate = LocalDateTime.now().minusDays(random.nextInt(30));
+
+                LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+                LocalDateTime doneDate = done ? now : null;
+                LocalDateTime dueDate = now.plusDays(random.nextInt(30));
+                LocalDateTime creationDate = now.minusDays(random.nextInt(30));
 
                 ToDo toDo = new ToDo(
                     null, // automatic ID 

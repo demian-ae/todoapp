@@ -7,6 +7,7 @@ interface ToDoListArgs {
     handleMarkDone: (id: number) => void,
     handleMarkUnDone: (id: number) => void,
     handleDelete: (id: number) => void,
+    handleEdit: (todo: ToDo) => void
 }
 
 function formatDateTime(dateTime: string): string {
@@ -24,7 +25,7 @@ function formatDateTime(dateTime: string): string {
 }
 
 
-export const ToDoList = ({todos, handleMarkDone, handleMarkUnDone, handleDelete}: ToDoListArgs) => {
+export const ToDoList = ({todos, handleMarkDone, handleMarkUnDone, handleDelete, handleEdit}: ToDoListArgs) => {
     const onMarkDone = (isDone: boolean, id:number | null) => {
         if(!id){ return }
         if(isDone){
@@ -41,6 +42,14 @@ export const ToDoList = ({todos, handleMarkDone, handleMarkUnDone, handleDelete}
         }
     }
 
+    const getTextDecorationClass = (done: boolean) => done ? 'text-decoration-line-through text-body-tertiary' : '';
+
+    const getStringPriority = (priority: number) => {
+        if(priority===1) return 'Low'
+        if(priority===2) return 'Medium'
+        if(priority===3) return 'High'
+    }
+
     return (
         <table className="table table-striped table-hover">
             <thead>
@@ -55,7 +64,7 @@ export const ToDoList = ({todos, handleMarkDone, handleMarkUnDone, handleDelete}
             <tbody>
                 {
                     todos.map((todo, index) => (
-                        <tr key={index}>
+                        <tr key={index} onClick={() => {onMarkDone(todo.done, todo.id)}}>
                             <td>
                                 <input 
                                     type="checkbox" 
@@ -64,12 +73,12 @@ export const ToDoList = ({todos, handleMarkDone, handleMarkUnDone, handleDelete}
                                     onChange={() => {onMarkDone(todo.done, todo.id)}}
                                     />
                                 </td>
-                            <td>{todo.text}</td>
-                            <td>{todo.priority}</td>
-                            <td>{formatDateTime(todo.dueDate)}</td>
+                            <td className={getTextDecorationClass(todo.done)}>{todo.text}</td>
+                            <td className={getTextDecorationClass(todo.done)}>{getStringPriority(todo.priority)}</td>
+                            <td className={getTextDecorationClass(todo.done)}>{formatDateTime(todo.dueDate)}</td>
                             <td>
                                 <button onClick={() => onDelete(todo.id)} className='btn btn-outline-danger m-1'><FaTrash /></button>
-                                <button className='btn btn-outline-warning m-1'><FaEdit /></button>
+                                <button onClick={() => handleEdit(todo)} className='btn btn-outline-warning m-1'><FaEdit /></button>
                             </td>
                         </tr>
                     ))

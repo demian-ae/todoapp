@@ -33,6 +33,7 @@ export const useForm = (initState: ToDo) => {
         data,
         handleChange,
         handleSubmit,
-        ...data
+        ...data,
+        setFormulario
     }
 }

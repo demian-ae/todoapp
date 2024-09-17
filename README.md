@@ -19,7 +19,7 @@ Technologies:
 The front-end application will run on http://localhost:8080.
 
 3. Running Tests:
-`npm run tests`.
+`npm run test`.
 
 ## Back-End
 Technologies:

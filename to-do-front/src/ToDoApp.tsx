@@ -6,7 +6,7 @@ import { useTodos } from "./hooks/useTodos";
 
 function ToDoApp() {
   const [isFormOpened, setIsFormOpened] = useState(false);
-  const { todos, loading, error, setTodos } = useTodos();
+  const { todos, loading, error, setTodos, reloadTodos } = useTodos();
 
   // const addTodo = (todo: string) => {
   //   setTodos([...todos, todo]);
@@ -22,7 +22,7 @@ function ToDoApp() {
 
   return (
     <>
-      <div className="container mt-5">
+      <div className="container">
         <h1 className="mb-4">To-Do App</h1>
         <Search />
         <AddToDoButton toggleForm={toggleForm}/>
@@ -35,7 +35,7 @@ function ToDoApp() {
       </div>
 
       {/* Modal */}
-      {isFormOpened && (<ToDoForm toggleForm={toggleForm} />)}
+      {isFormOpened && (<ToDoForm toggleForm={toggleForm} reloadTodos={reloadTodos} />)}
 
     </>
   );

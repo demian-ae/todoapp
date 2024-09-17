@@ -45,7 +45,7 @@ body.active-modal {
 .card-space {
 
     max-width: 600px;
-    min-width: 300px;
+    min-width: 500px;
     position: absolute;
     top: 40%;
     left: 50%;

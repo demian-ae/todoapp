@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react"
 import { HiOutlineSortAscending, HiOutlineSortDescending } from "react-icons/hi";
 import { SearchAndFilter } from "../types/SearchAndFilter";
@@ -26,7 +25,6 @@ interface OrderButtonsArgs {
     changeSearchAndFilter: (searchAndFilter: SearchAndFilter) => void
 }
 
-
 export const OrderButtons = ({ currentSearchAndFilter, changeSearchAndFilter }: OrderButtonsArgs) => {
     const [orderPriority, setPriority] = useState<string>("none");
     const [orderDueDate, setDueDate] = useState<string>("none");
@@ -52,7 +50,6 @@ export const OrderButtons = ({ currentSearchAndFilter, changeSearchAndFilter }: 
     }
 
     useEffect(() => {
-        console.log("current",currentSearchAndFilter)
         let aux = {...currentSearchAndFilter};
         if(orderPriority!=="none"){
             if(orderPriority==="asc"){
@@ -73,7 +70,6 @@ export const OrderButtons = ({ currentSearchAndFilter, changeSearchAndFilter }: 
         }else{
             aux.isDueDateAsc=undefined;
         }
-        console.log("let",aux)
         changeSearchAndFilter(aux);
     }, [orderPriority, orderDueDate])
 

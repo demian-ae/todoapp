@@ -23,7 +23,6 @@ function formatDateTime(dateTime: string): string {
     return `${date} ${hours}:${minutes}`;
 }
 
-
 export const ToDoList = ({todos, handleMarkDone, handleMarkUnDone, handleDelete, handleEdit}: ToDoListArgs) => {
     const onMarkDone = (isDone: boolean, id:number | null) => {
         if(!id){ return }
@@ -32,14 +31,9 @@ export const ToDoList = ({todos, handleMarkDone, handleMarkUnDone, handleDelete,
         }else{ 
             handleMarkDone(id)
         }
-
     }
 
-    const onDelete = (id:number | null) => {
-        if(id){
-            handleDelete(id);
-        }
-    }
+    const onDelete = (id: number | null) => id && handleDelete(id);
 
     const getTextDecorationClass = (done: boolean) => done ? 'text-decoration-line-through text-body-tertiary' : '';
 
@@ -76,14 +70,23 @@ export const ToDoList = ({todos, handleMarkDone, handleMarkUnDone, handleDelete,
                             <td className={getTextDecorationClass(todo.done)} onClick={() => {onMarkDone(todo.done, todo.id)}}>{getStringPriority(todo.priority)}</td>
                             <td className={getTextDecorationClass(todo.done)} onClick={() => {onMarkDone(todo.done, todo.id)}}>{todo.dueDate?formatDateTime(todo.dueDate):"None"}</td>
                             <td>
-                                <button onClick={() => onDelete(todo.id)} className='btn btn-outline-danger m-1'><FaTrash /></button>
-                                <button onClick={() => handleEdit(todo)} className='btn btn-outline-warning m-1'><FaEdit /></button>
+                                <button 
+                                    onClick={() => onDelete(todo.id)} className='btn btn-outline-danger m-1'
+                                    data-testid={`delete-button-${todo.id}`}
+                                >
+                                    <FaTrash />
+                                </button>
+                                <button 
+                                    onClick={() => handleEdit(todo)} className='btn btn-outline-warning m-1'
+                                    data-testid={`edit-button-${todo.id}`}
+                                >
+                                    <FaEdit />
+                                </button>
                             </td>
                         </tr>
                     ))
                 }
             </tbody>
-
         </table>
     )
 }

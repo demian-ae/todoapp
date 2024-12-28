@@ -6,17 +6,16 @@ interface PaginatorArgs {
     changePage: (pageNum: number) => void
 }
 
-export const Paginator = ({currPage, changePage}: PaginatorArgs) => {
+export const Paginator = ({ currPage, changePage }: PaginatorArgs) => {
     const [pages, setPages] = useState<number[]>([]);
 
-    useEffect(() =>{
+    useEffect(() => {
         let aux: number[] = [];
-        for(let i=1; i<currPage.total+1; i++){
+        for (let i = 1; i < currPage.total + 1; i++) {
             aux.push(i);
         }
         setPages(aux);
-    }
-    ,[currPage]);
+    }, [currPage]);
 
     const handlePageChange = (pageNum: number) => {
         if (pageNum !== currPage.curr) {
@@ -39,7 +38,10 @@ export const Paginator = ({currPage, changePage}: PaginatorArgs) => {
     return (
         <nav className="d-flex justify-content-center" aria-label="Page navigation example">
             <ul className="pagination">
-                <li className={`page-item ${currPage.curr === 1 ? 'disabled' : ''}`}>
+                <li 
+                    className={`page-item ${currPage.curr === 1 ? 'disabled' : ''}`}
+                    data-testid="previous-button"
+                >
                     <button className="page-link" onClick={(e) => { e.preventDefault(); handlePrevious(); }}>
                         Previous
                     </button>
@@ -57,7 +59,10 @@ export const Paginator = ({currPage, changePage}: PaginatorArgs) => {
                         </button>
                     </li>
                 ))}
-                <li className={`page-item ${currPage.curr === currPage.total ? 'disabled' : ''}`}>
+                <li 
+                    className={`page-item ${currPage.curr === currPage.total ? 'disabled' : ''}`}
+                    data-testid="next-button"
+                >
                     <button className="page-link" onClick={(e) => { e.preventDefault(); handleNext(); }}>
                         Next
                     </button>

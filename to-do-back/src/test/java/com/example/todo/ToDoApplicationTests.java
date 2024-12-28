@@ -1,10 +1,10 @@
-package com.example.to_do_back;
+package com.example.todo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ToDoBackApplicationTests {
+class ToDoApplicationTests {
 
 	@Test
 	void contextLoads() {

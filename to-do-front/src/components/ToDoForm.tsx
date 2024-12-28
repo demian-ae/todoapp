@@ -1,7 +1,6 @@
-
 import { ToDo } from "../types/ToDo";
 import { useForm } from "../hooks/useForm";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 interface ToDoFormArgs {
     toggleForm: () => void,
@@ -15,8 +14,14 @@ export const ToDoForm = ({ toggleForm, reloadTodos, existingTodo }: ToDoFormArgs
     const title = existingTodo? "Edit to-do":"New to-do";
     const initialPriority = existingTodo? existingTodo.priority: "1";
 
+    const [isDisabled, setIsDisabled] = useState(true);
+
     // Define the state for the selected value
     const [selectedValue, setSelectedValue] = useState(initialPriority);
+
+    useEffect(() => {
+        setIsDisabled(text.trim().length === 0); // Enable button if text is not empty
+    }, [text]);
 
     // Event handler for select change
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -35,15 +40,12 @@ export const ToDoForm = ({ toggleForm, reloadTodos, existingTodo }: ToDoFormArgs
         reloadTodos();
     }
 
-
     return (
-
         <div className="form-container">
             <div onClick={toggleForm} className="overlay"></div>
             <div className="card card-space border rounded ">
                 <h2>{title}</h2>
-
-                <form autoComplete="off" className="m-2" onSubmit={submitData}>
+                <form autoComplete="off" className="m-2" onSubmit={submitData} aria-label="To-Do Form">
                     <div className="mb-1">
                         <label className="form-label">Task:</label>
                         <input
@@ -78,17 +80,14 @@ export const ToDoForm = ({ toggleForm, reloadTodos, existingTodo }: ToDoFormArgs
                             </button>
                             <button
                                 type="submit"
-                                className="btn btn-primary m-1">
+                                className="btn btn-primary m-1"
+                                disabled={isDisabled}
+                                >
                                 Save
                             </button>
                         </div>
                     </div>
-
                 </form>
-
-                {/* <span>{JSON.stringify(data)} + VALUE: {selectedValue}</span> */}
-
-
             </div>
         </div>
     )

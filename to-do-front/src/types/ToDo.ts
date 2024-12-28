@@ -1,13 +1,3 @@
-export interface ToDo {
-    id: number | null;
-    text: string;
-    done: boolean;
-    priority: number;
-    doneDate: string;
-    dueDate: string;
-    creationDate: string;
-}
-
 function getCurrentDatetime(): string {
     const now = new Date();
     
@@ -19,6 +9,16 @@ function getCurrentDatetime(): string {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     
     return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+export interface ToDo {
+    id: number | null;
+    text: string;
+    done: boolean;
+    priority: number;
+    doneDate: string;
+    dueDate: string;
+    creationDate: string;
 }
 
 export function ToDo(): ToDo {

@@ -39,3 +39,11 @@ export const deleteTodo = async (id: number): Promise<ToDo> =>{
         method: 'DELETE'
     })
 }
+
+
+export const editTodo = async (todo: ToDo): Promise<ToDo> =>{
+    return apiCLient<ToDo>(`/todos/${todo.id}`,{
+        method: 'PUT',
+        body: JSON.stringify(todo)
+    })
+}

@@ -3,6 +3,8 @@ import { ToDoList, ToDoForm, Search, AddToDoButton, Paginator, Metrics, OrderBut
 import "./components/ModalForm.css"
 import { useTodos } from "./hooks/useTodos";
 import { ToDo } from "./types/ToDo";
+import { Loading } from "./components/Loading";
+import { Error } from "./components/Error";
 
 
 /**
@@ -48,17 +50,21 @@ function ToDoApp() {
 					</div>
 				</div>
 
-				{loading && <p>Loading...</p>}
-				{error && <p>Error: {error}</p>}
-				<ToDoList
-					todos={todos}
-					handleMarkDone={handleMarkDone}
-					handleMarkUnDone={handleMarkUnDone}
-					handleDelete={handleDelete}
-					handleEdit={editTodo}
-				/>
-				<Paginator currPage={page} changePage={changePage} />
-				<Metrics all={page.allAvgTime} low={page.lowAvgTime} medium={page.mediumAvgTime} high={page.highAvgTime} />
+				{loading && <Loading />}
+				{error && <Error error={error} />}
+				{!loading && !error && (
+					<>
+						<ToDoList
+							todos={todos}
+							handleMarkDone={handleMarkDone}
+							handleMarkUnDone={handleMarkUnDone}
+							handleDelete={handleDelete}
+							handleEdit={editTodo}
+						/>
+						<Paginator currPage={page} changePage={changePage} />
+						<Metrics all={page.allAvgTime} low={page.lowAvgTime} medium={page.mediumAvgTime} high={page.highAvgTime} />
+					</>
+				)}
 			</div>
 
 			{isFormOpened && (

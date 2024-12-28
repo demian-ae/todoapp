@@ -1,15 +1,28 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { SearchAndFilter } from "../types/SearchAndFilter";
 
+/**
+ * Interface for the Search component props.
+ */
 interface SearchArgs {
     onSearch: (searchAndFilter: SearchAndFilter) => void;
 }
 
-export const Search = ({ onSearch }: SearchArgs) => {
+/**
+ * A component that provides a search and filter form for to-dos.
+ * @param {SearchArgs} props - The properties object.
+ * @param {Function} props.onSearch - Function to handle the search and filter action.
+ * @returns {JSX.Element} The rendered search component.
+ */
+export const Search = ({ onSearch }: SearchArgs): JSX.Element => {
     const [searchAndFilter, setSearchAndFilter] = useState<SearchAndFilter>({});
     const [priority, setPriority] = useState(0);
     const [done, setDone] = useState<string>();
 
+    /**
+     * Handles the change event for the text input.
+     * @param {ChangeEvent<HTMLInputElement>} event - The change event.
+     */
     const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = target;
 
@@ -19,6 +32,10 @@ export const Search = ({ onSearch }: SearchArgs) => {
         });
     };
 
+    /**
+     * Handles the change event for the priority select input.
+     * @param {React.ChangeEvent<HTMLSelectElement>} event - The change event.
+     */
     const handleSelectPriorityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selected = event.target.value;
         const priority = parseInt(selected);
@@ -29,6 +46,10 @@ export const Search = ({ onSearch }: SearchArgs) => {
         });
     };
 
+    /**
+     * Handles the change event for the done state select input.
+     * @param {React.ChangeEvent<HTMLSelectElement>} event - The change event.
+     */
     const handleSelectDoneChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selected = event.target.value;
         setDone(selected);
@@ -45,6 +66,10 @@ export const Search = ({ onSearch }: SearchArgs) => {
         }
     };
 
+    /**
+     * Handles the form submit event.
+     * @param {FormEvent} event - The form submit event.
+     */
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         onSearch(searchAndFilter);

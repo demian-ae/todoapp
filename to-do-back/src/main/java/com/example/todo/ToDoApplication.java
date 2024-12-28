@@ -15,15 +15,29 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+/**
+ * Main application class for the ToDo application.
+ */
 @SpringBootApplication
 public class ToDoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ToDoApplication.class, args);
-	}
+    /**
+     * Main method to run the Spring Boot application.
+     *
+     * @param args command line arguments
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(ToDoApplication.class, args);
+    }
 
-	@Bean
-	public CommandLineRunner demo(ToDoLocalRepository toDoRepository) {
+    /**
+     * Bean to populate the repository with demo data.
+     *
+     * @param toDoRepository the repository to populate
+     * @return a CommandLineRunner to run the demo data population
+     */
+    @Bean
+    public CommandLineRunner demo(ToDoLocalRepository toDoRepository) {
         return (args) -> {
             List<String> tasks = Arrays.asList(
                 "Random task 1", "Random task 2", "Random task 3", "Random task 4", "Random task 5",
@@ -32,6 +46,7 @@ public class ToDoApplication {
 
             Random random = new Random();
 
+            // Populate the repository with demo data
             IntStream.range(0, tasks.size()).forEach(i -> {
                 String taskDescription = tasks.get(i);
                 boolean done = random.nextBoolean();
@@ -54,6 +69,6 @@ public class ToDoApplication {
                 
                 toDoRepository.save(toDo);
             });
-    	};
-	}
+        };
+    }
 }

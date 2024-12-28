@@ -16,7 +16,7 @@ public class AvgTimesHelperTest {
 
     @BeforeEach
     public void setUp() {
-        avgTimesHelper = new AvgTimesHelper();
+        avgTimesHelper = new AvgTimesHelper(List.of());
     }
 
     @Test

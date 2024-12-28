@@ -6,46 +6,92 @@ import java.util.List;
 
 import com.example.todo.model.ToDo;
 
+/**
+ * Helper class for calculating average times for ToDo items.
+ */
 public class AvgTimesHelper {
+
+    /**
+     * The average time for all ToDo items.
+     */
     public String allAvgTime;
+
+    /**
+     * The average time for low priority ToDo items.
+     */
     public String lowAvgTime;
+
+    /**
+     * The average time for medium priority ToDo items.
+     */
     public String mediumAvgTime;
+
+    /**
+     * The average time for high priority ToDo items.
+     */
     public String highAvgTime;
 
-    public void calculateAvgTimes(List<ToDo> todos){
+    /**
+     * Constructor that receives a list of ToDo items.
+     *
+     * @param todos the list of ToDo items
+     */
+    public AvgTimesHelper(List<ToDo> todos) {
+        calculateAvgTimes(todos);
+    }
+    
+    /**
+     * Calculates the average times for ToDo items based on their priority.
+     *
+     * @param todos the list of ToDo items to calculate average times for
+     */
+    public void calculateAvgTimes(List<ToDo> todos) {
         long allDiffTimesSum = 0; int countAllDiffTimes = 0;
         long lowDiffTimesSum = 0; int countLowDiffTimes = 0;
         long mediumDiffTimesSum = 0; int countMediumDiffTimes = 0;
         long highDiffTimesSum = 0; int countHighDiffTimes = 0;
 
         for (ToDo todo : todos) {
-            if(todo.isDone()) continue;
-            if(todo.getDueDate() == null) continue;
+            if (todo.isDone()) continue;
+            if (todo.getDueDate() == null) continue;
             long dif = calculateDifferenceInMinutes(todo.getCreationDate(), todo.getDueDate());
-            if(todo.getPriority()==1) {lowDiffTimesSum+=dif; countLowDiffTimes++;}
-            if(todo.getPriority()==2) {mediumDiffTimesSum+=dif; countMediumDiffTimes++;}
-            if(todo.getPriority()==3) {highDiffTimesSum+=dif; countHighDiffTimes++;}
-            allDiffTimesSum+=dif; countAllDiffTimes++;
+            if (todo.getPriority() == 1) { lowDiffTimesSum += dif; countLowDiffTimes++; }
+            if (todo.getPriority() == 2) { mediumDiffTimesSum += dif; countMediumDiffTimes++; }
+            if (todo.getPriority() == 3) { highDiffTimesSum += dif; countHighDiffTimes++; }
+            allDiffTimesSum += dif; countAllDiffTimes++;
         }
 
-        this.allAvgTime = formatMinutes(countAllDiffTimes!=0?(allDiffTimesSum/countAllDiffTimes):0);
-        this.lowAvgTime = formatMinutes(countLowDiffTimes!=0?(lowDiffTimesSum/countLowDiffTimes):0);
-        this.mediumAvgTime = formatMinutes(countMediumDiffTimes!=0?(mediumDiffTimesSum/countMediumDiffTimes):0);
-        this.highAvgTime = formatMinutes(countHighDiffTimes!=0?(highDiffTimesSum/countHighDiffTimes):0);
+        this.allAvgTime = formatMinutes(countAllDiffTimes != 0 ? (allDiffTimesSum / countAllDiffTimes) : 0);
+        this.lowAvgTime = formatMinutes(countLowDiffTimes != 0 ? (lowDiffTimesSum / countLowDiffTimes) : 0);
+        this.mediumAvgTime = formatMinutes(countMediumDiffTimes != 0 ? (mediumDiffTimesSum / countMediumDiffTimes) : 0);
+        this.highAvgTime = formatMinutes(countHighDiffTimes != 0 ? (highDiffTimesSum / countHighDiffTimes) : 0);
     }
 
+    /**
+     * Calculates the difference in minutes between two LocalDateTime instances.
+     *
+     * @param start the start LocalDateTime
+     * @param end the end LocalDateTime
+     * @return the difference in minutes
+     */
     private static long calculateDifferenceInMinutes(LocalDateTime start, LocalDateTime end) {
         if (start == null || end == null) {
             throw new IllegalArgumentException("Both start and end LocalDateTime must be non-null");
         }
-        
+
         // Calculate the duration between the two LocalDateTime instances
         Duration duration = Duration.between(start, end);
-        
+
         // Get the difference in minutes
         return duration.toMinutes();
     }
 
+    /**
+     * Formats a duration in minutes into a human-readable string.
+     *
+     * @param minutes the duration in minutes
+     * @return the formatted string
+     */
     private static String formatMinutes(long minutes) {
         if (minutes < 0) {
             throw new IllegalArgumentException("Minutes cannot be negative");

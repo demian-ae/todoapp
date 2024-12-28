@@ -16,12 +16,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
+/**
+ * Local repository implementation for managing ToDo items.
+ */
 @Repository
 public class ToDoLocalRepository implements ToDoRepository {
     private final Map<Long, ToDo> todoMap = new ConcurrentHashMap<>();
     private long idCounter = 1;
     public static final int PAGE_SIZE = 10;
 
+    /**
+     * Saves a ToDo item. If the item does not have an ID, a new ID is assigned.
+     *
+     * @param toDo the ToDo item to save
+     * @return the saved ToDo item
+     */
     public synchronized ToDo save(ToDo toDo) {
         if (toDo.getId() == null) {
             toDo.setId(idCounter++);
@@ -30,15 +39,31 @@ public class ToDoLocalRepository implements ToDoRepository {
         return toDo;
     }
 
+    /**
+     * Finds a ToDo item by its ID.
+     *
+     * @param id the ID of the ToDo item to find
+     * @return an Optional containing the ToDo item, or empty if not found
+     */
     public Optional<ToDo> findById(Long id) {
         return Optional.ofNullable(todoMap.get(id));
     }
 
+    /**
+     * Retrieves a paginated list of ToDo items based on various filters.
+     *
+     * @param pageNum the page number to retrieve
+     * @param nameFilter the text to filter ToDo items by. (optional)
+     * @param priorityFilter the priority level to filter ToDo items by. (optional)
+     * @param doneFilter the completion status to filter ToDo items by. (optional)
+     * @param isPriorityAsc whether to sort by priority in ascending order. If null, no sorting is applied.
+     * @param isDueDateAsc whether to sort by due date in ascending order. If null, no sorting is applied.
+     * @return a paginated list of ToDo items
+     */
     public Page findAll(int pageNum, String nameFilter, Integer priorityFilter, Boolean doneFilter, Boolean isPriorityAsc, Boolean isDueDateAsc) {
         List<ToDo> res = new ArrayList<>(todoMap.values());
 
-        AvgTimesHelper avgTimes = new AvgTimesHelper();
-        avgTimes.calculateAvgTimes(res);
+        AvgTimesHelper avgTimes = new AvgTimesHelper(res);
 
         Page pageRes = new Page();
         pageRes.setAllAvgTime(avgTimes.allAvgTime);
@@ -55,10 +80,22 @@ public class ToDoLocalRepository implements ToDoRepository {
         return pageRes;
     }
 
+    /**
+     * Deletes a ToDo item by its ID.
+     *
+     * @param id the ID of the ToDo item to delete
+     */
     public void deleteById(Long id) {
         todoMap.remove(id);
     }
 
+    /**
+     * Updates a ToDo item by its ID.
+     *
+     * @param id the ID of the ToDo item to update
+     * @param toDo the updated ToDo item
+     * @return an Optional containing the updated ToDo item, or empty if not found
+     */
     public Optional<ToDo> updateById(Long id, ToDo toDo) {
         return Optional.ofNullable(todoMap.get(id)).map(curr -> {
             curr.setText(toDo.getText());
@@ -72,6 +109,11 @@ public class ToDoLocalRepository implements ToDoRepository {
         });
     }
 
+    /**
+     * Marks a ToDo item as done by its ID.
+     *
+     * @param id the ID of the ToDo item to mark as done
+     */
     public void markAsDoneById(Long id) {
         todoMap.computeIfPresent(id, (key, curr) -> {
             if (!curr.isDone()) {
@@ -82,6 +124,11 @@ public class ToDoLocalRepository implements ToDoRepository {
         });
     }
 
+    /**
+     * Marks a ToDo item as undone by its ID.
+     *
+     * @param id the ID of the ToDo item to mark as undone
+     */
     public void markUndoneById(Long id) {
         todoMap.computeIfPresent(id, (key, curr) -> {
             if (curr.isDone()) {
@@ -92,6 +139,14 @@ public class ToDoLocalRepository implements ToDoRepository {
         });
     }
 
+    /**
+     * Retrieves a sublist of a collection based on the page number and page size.
+     *
+     * @param coll the collection to paginate
+     * @param page the page number to retrieve
+     * @param size the size of each page
+     * @return a sublist of the collection representing the requested page
+     */
     private static <T> Collection<T> getPage(List<T> coll, int page, int size) {
         page = page - 1;
         if (page < 0 || size <= 0) {
@@ -108,6 +163,15 @@ public class ToDoLocalRepository implements ToDoRepository {
         return coll.subList(start, end);
     }
 
+    /**
+     * Applies filters to a list of ToDo items.
+     *
+     * @param todos the list of ToDo items to filter
+     * @param nameFilter the text to filter ToDo items by
+     * @param priorityFilter the priority level to filter ToDo items by
+     * @param doneFilter the completion status to filter ToDo items by
+     * @return the filtered list of ToDo items
+     */
     private List<ToDo> applyFilters(List<ToDo> todos, String nameFilter, Integer priorityFilter, Boolean doneFilter) {
         if (nameFilter != null && !nameFilter.isEmpty()) {
             todos = todos.stream()
@@ -130,6 +194,14 @@ public class ToDoLocalRepository implements ToDoRepository {
         return todos;
     }
 
+    /**
+     * Sorts a list of ToDo items based on priority and due date.
+     *
+     * @param todos the list of ToDo items to sort
+     * @param isPriorityAsc whether to sort by priority in ascending order
+     * @param isDueDateAsc whether to sort by due date in ascending order
+     * @return the sorted list of ToDo items
+     */
     private List<ToDo> sortTodos(List<ToDo> todos, Boolean isPriorityAsc, Boolean isDueDateAsc) {
         if (isPriorityAsc != null) {
             Comparator<ToDo> priorityComparator = Comparator.comparing(ToDo::getPriority);
@@ -157,6 +229,12 @@ public class ToDoLocalRepository implements ToDoRepository {
         return todos;
     }
 
+    /**
+     * Groups a list of ToDo items by their priority.
+     *
+     * @param toDoList the list of ToDo items to group
+     * @return a map where the keys are priority levels and the values are lists of ToDo items with that priority
+     */
     private static Map<Integer, List<ToDo>> groupToDosByPriority(List<ToDo> toDoList) {
         return toDoList.stream()
                 .collect(Collectors.groupingBy(ToDo::getPriority));

@@ -1,49 +1,69 @@
-
 import { ToDo } from "../types/ToDo";
 import { useForm } from "../hooks/useForm";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
+/**
+ * Interface for the ToDoForm component props.
+ */
 interface ToDoFormArgs {
     toggleForm: () => void,
     reloadTodos: () => void,
     existingTodo: ToDo | null;
 }
 
-export const ToDoForm = ({ toggleForm, reloadTodos, existingTodo }: ToDoFormArgs) => {
-    const { text, dueDate, data, handleChange, handleSubmit, setFormulario } = useForm(existingTodo?existingTodo:ToDo());
+/**
+ * A form component for creating or editing a to-do item.
+ * @param {ToDoFormArgs} props - The properties object.
+ * @param {Function} props.toggleForm - Function to toggle the form visibility.
+ * @param {Function} props.reloadTodos - Function to reload the list of to-dos.
+ * @param {ToDo | null} props.existingTodo - The existing to-do item to edit, or null for a new to-do.
+ * @returns {JSX.Element} The rendered to-do form component.
+ */
+export const ToDoForm = ({ toggleForm, reloadTodos, existingTodo }: ToDoFormArgs): JSX.Element => {
+    const { text, dueDate, data, handleChange, handleSubmit, setFormulario } = useForm(existingTodo ? existingTodo : ToDo());
 
-    const title = existingTodo? "Edit to-do":"New to-do";
-    const initialPriority = existingTodo? existingTodo.priority: "1";
+    const title = existingTodo ? "Edit to-do" : "New to-do";
+    const initialPriority = existingTodo ? existingTodo.priority : "1";
+
+    const [isDisabled, setIsDisabled] = useState(true);
 
     // Define the state for the selected value
     const [selectedValue, setSelectedValue] = useState(initialPriority);
 
-    // Event handler for select change
+    useEffect(() => {
+        setIsDisabled(text.trim().length === 0); // Enable button if text is not empty
+    }, [text]);
+
+    /**
+     * Event handler for select change.
+     * @param {React.ChangeEvent<HTMLSelectElement>} event - The change event.
+     */
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const selected = event.target.value
+        const selected = event.target.value;
         setSelectedValue(selected);
         const priority = parseInt(selected);
         setFormulario({
             ...data,
             priority: priority
-        })
+        });
     };
 
+    /**
+     * Handles the form submit event.
+     * @param {FormEvent} ev - The form submit event.
+     */
     const submitData = (ev: FormEvent) => {
         handleSubmit(data, ev);
         toggleForm();
         reloadTodos();
-    }
-
+    };
 
     return (
-
         <div className="form-container">
             <div onClick={toggleForm} className="overlay"></div>
             <div className="card card-space border rounded ">
                 <h2>{title}</h2>
-
-                <form autoComplete="off" className="m-2" onSubmit={submitData}>
+                <form autoComplete="off" className="m-2" onSubmit={submitData} aria-label="To-Do Form">
                     <div className="mb-1">
                         <label className="form-label">Task:</label>
                         <input
@@ -78,17 +98,14 @@ export const ToDoForm = ({ toggleForm, reloadTodos, existingTodo }: ToDoFormArgs
                             </button>
                             <button
                                 type="submit"
-                                className="btn btn-primary m-1">
+                                className="btn btn-primary m-1"
+                                disabled={isDisabled}
+                                >
                                 Save
                             </button>
                         </div>
                     </div>
-
                 </form>
-
-                {/* <span>{JSON.stringify(data)} + VALUE: {selectedValue}</span> */}
-
-
             </div>
         </div>
     )

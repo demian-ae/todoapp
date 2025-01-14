@@ -1,38 +1,44 @@
-package com.example.to_do_back;
+package com.example.todo;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.example.to_do_back.todo.ToDo;
-import com.example.to_do_back.todo.ToDoRepository;
+import com.example.todo.model.ToDo;
+import com.example.todo.repository.ToDoLocalRepository;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+/**
+ * Main application class for the ToDo application.
+ */
 @SpringBootApplication
-public class ToDoBackApplication {
+public class ToDoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ToDoBackApplication.class, args);
-	}
+    /**
+     * Main method to run the Spring Boot application.
+     *
+     * @param args command line arguments
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(ToDoApplication.class, args);
+    }
 
-	@Bean
-	public CommandLineRunner demo(ToDoRepository toDoRepository) {
+    /**
+     * Bean to populate the repository with demo data.
+     *
+     * @param toDoRepository the repository to populate
+     * @return a CommandLineRunner to run the demo data population
+     */
+    @Bean
+    public CommandLineRunner demo(ToDoLocalRepository toDoRepository) {
         return (args) -> {
-            // List<String> tasks = Arrays.asList(
-            //     "Random task 1", "Random task 2", "Random task 3", "Random task 4", "Random task 5",
-            //     "Random task 6", "Random task 7", "Random task 8", "Random task 9", "Random task 10",
-            //     "Random task 11", "Random task 12", "Random task 13", "Random task 14", "Random task 15",
-            //     "Random task 16", "Random task 17", "Random task 18", "Random task 19", "Random task 20"
-            // );
-
             List<String> tasks = Arrays.asList(
                 "Random task 1", "Random task 2", "Random task 3", "Random task 4", "Random task 5",
                 "Random task 6", "Random task 7", "Random task 8", "Random task 9", "Random task 10"
@@ -40,6 +46,7 @@ public class ToDoBackApplication {
 
             Random random = new Random();
 
+            // Populate the repository with demo data
             IntStream.range(0, tasks.size()).forEach(i -> {
                 String taskDescription = tasks.get(i);
                 boolean done = random.nextBoolean();
@@ -62,6 +69,6 @@ public class ToDoBackApplication {
                 
                 toDoRepository.save(toDo);
             });
-    	};
-	}
+        };
+    }
 }
